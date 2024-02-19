@@ -1,0 +1,37 @@
+public class StripePaymentHandler {
+
+// prod_PafMHi2jeNGw24
+@AuraEnabled
+    public static String Stripesession()
+    {
+        String key = 'sk_test_51OjIcxSFFgG6dOxOvWZv8nCXCwveJm65poakbyzh04Fd5vmPjHU1We6mXp52cDh9Q2JF9dKMFEDIBIwdg88vVTFr00uBMVSHun';
+        String url='https://api.stripe.com/v1/checkout/sessions';
+        String body = 'mode=payment&line_items[0][price]=price_1OlU7vSFFgG6dOxOWgCZnzYN&line_items[0][quantity]=2&success_url=https://stackoverflow.com/questions/59282024/export-transactions-require-a-customer-name-and-address-stripe-error&customer=cus_PaewUU4KOIx8JL';
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setMethod('POST');
+        request.setEndpoint(url);
+        request.setHeader('Authorization', 'Bearer ' + key);
+        request.setBody(body);
+        HttpResponse response = http.send(request);
+        System.debug(response.getbody());
+        Map<String,Object> responseM = new Map<String,Object>();
+        responseM = (Map<String,Object>)JSON.deserializeUntyped(response.getBody());
+        String redURL=(String)responseM.get('url');
+        
+        
+        //System.debug(redURL);
+        // Parse the JSON response
+        /*if(response.getStatusCode() != 201) {
+            System.debug('response.getStatusCode()-------'+ response.getStatusCode());
+            System.debug('response.getBody()-------'+ response.getBody());
+            System.debug('response.getStatus()-------'+ response.getStatus());
+        } else {
+
+            System.debug('ELSE-----------'+response.getBody());
+        }*/
+        //PageReference ResPage = new PageReference(redURL);
+        return redURL;
+    
+    }
+}
